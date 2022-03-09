@@ -184,7 +184,59 @@ var agecatCenters = { // Center locations of the bubbles.
     'Stimmt eher nicht': 70, 
     'Stimmt nicht': 70
   };  
+    // Sechster Button: Geldentschädigung
     
+    
+  var moneyCenters = { // Center locations of the bubbles. 
+    '0': { x: 220, y: height / 2  },
+    '1': { x: 420, y: height / 2  },
+    '2': { x: 600, y: height / 2  },
+    '3': { x: 770, y: height / 2  }
+  
+  };
+
+  var moneyTitleX = {  // X locations of the year titles.
+    '"Für wie viel Geld würden sie ihre Geräte eine Woche nicht benutzen?"': 500,
+    'Ohne Entschädigung': 110,
+    '5CHF bis 50CHF': 370, 
+    '50CHF bis 100CHF': 595, 
+    'Mehr als 100CHF': 870
+  };
+    
+  var moneyTitleY = {  // Y locations of the year titles.
+    '"Für wie viel Geld würden sie ihre Geräte eine Woche nicht benutzen?"': 35, 
+    'Ohne Entschädigung': 70,
+    '5CHF bis 50CHF': 70, 
+    '50CHF bis 100CHF': 70, 
+    'Mehr als 100CHF': 70
+  };  
+ 
+    // Siebter Button: Handyverzicht
+    
+    
+  var verzichtCenters = { // Center locations of the bubbles. 
+    '1': { x: 250, y: height / 2  },
+    '2': { x: 420, y: height / 2  },
+    '3': { x: 600, y: height / 2  },
+    '4': { x: 770, y: height / 2  }
+  
+  };
+
+  var verzichtTitleX = {  // X locations of the year titles.
+    '"Würden sie ihr Handy für einen Tag nicht benutzen?"': 500,
+    'Stimmt': 160,
+    'Stimmt eher': 440, 
+    'Stimmt eher nicht': 695, 
+    'Stimmt nicht': 912
+  };
+    
+  var verzichtTitleY = {  // Y locations of the year titles.
+    '"Würden sie ihr Handy für einen Tag nicht benutzen?"': 35, 
+    'Stimmt': 70,
+    'Stimmt eher': 70, 
+    'Stimmt eher nicht': 70, 
+    'Stimmt nicht': 70
+  };  
     
     
 //* ------------------------------------------------------------------
@@ -247,7 +299,7 @@ var agecatCenters = { // Center locations of the bubbles.
         size: d.bszkat2,
         screentime: d.bsz,
           
-        age: d.alter,
+      
         agecat: d.kategoriealter,
           
         sex: d.geschlecht,
@@ -255,7 +307,11 @@ var agecatCenters = { // Center locations of the bubbles.
         concern: d.sorgenkat,  
         concerntext: d.sorgen,
         
-         
+        money: d.geldeinewochekat,
+        moneytext: d.geldeinewoche,
+        
+        verzicht: d.verzichtkat,
+        verzichttext: d.verzicht,
         
         x: Math.random() * 900,
         y: Math.random() * 800
@@ -352,7 +408,9 @@ var agecatCenters = { // Center locations of the bubbles.
     hideAgecat();
     hideSex();
     hideScreentime();
-    hideConcern();  
+    hideConcern(); 
+    hideMoney();
+    hideVerzicht();
     
     force.on('tick', function (e) {
       bubbles.each(moveToCenter(e.alpha))
@@ -395,6 +453,8 @@ Die Positionierung basiert auf dem alpha Parameter des force layouts und wird kl
     hideSex();
     hideConcern();
     hideScreentime();
+    hideMoney();
+    hideVerzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToYear(e.alpha))
@@ -443,6 +503,8 @@ function moveToYear(alpha) {
     hideSex();
     hideConcern();
     hideScreentime();
+    hideMoney();
+    hideVerzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToAgecat(e.alpha))
@@ -491,6 +553,8 @@ function moveToAgecat(alpha) {
     hideAgecat();
     hideConcern();
     hideScreentime();
+    hideMoney();
+    hideVerzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToSex(e.alpha))
@@ -539,6 +603,8 @@ function moveToAgecat(alpha) {
     hideSex();
     hideAgecat();
     hideConcern();
+    hideMoney();
+    hideVerzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToScreentime(e.alpha))
@@ -588,6 +654,8 @@ function moveToAgecat(alpha) {
     hideSex();
     hideAgecat();
     hideScreentime();
+    hideMoney();
+    hideVerzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToConcern(e.alpha))
@@ -623,6 +691,105 @@ function moveToAgecat(alpha) {
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
     }
+    //* ------------------------------------------------------------------
+//
+// Geldentschädigung
+//
+// -----------------------------------------------------------------*/
+    
+  function splitBubblesintoMoney() {
+    showMoney();
+    hideYear();
+    hideSex();
+    hideAgecat();
+    hideScreentime();
+    hideConcern();
+    hideVerzicht();
+
+    force.on('tick', function (e) {
+      bubbles.each(moveToMoney(e.alpha))
+        .attr('cx', function (d) { return d.x; })
+        .attr('cy', function (d) { return d.y; });
+    });
+
+    force.start();
+  }
+
+  function moveToMoney(alpha) {
+    return function (d) {
+      var target = moneyCenters[d.money];
+      d.x = d.x + (target.x - d.x) * damper * alpha * 1.1;
+      d.y = d.y + (target.y - d.y) * damper * alpha * 1.1;
+    };
+  }
+
+  function hideMoney() {
+    svg.selectAll('.money').remove();
+  }
+
+  function showMoney() {
+
+    var moneyData = d3.keys(moneyTitleX);
+    var money = svg.selectAll('.money')
+      .data(moneyData);
+
+    money.enter().append('text')
+      .attr('class', 'money')
+      .attr('x', function (d) { return moneyTitleX[d]; })
+      .attr('y', function (d) { return moneyTitleY[d]; })
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+    }
+     //* ------------------------------------------------------------------
+//
+// Handyverzicht
+//
+// -----------------------------------------------------------------*/
+    
+  function splitBubblesintoVerzicht() {
+    showVerzicht();
+    hideYear();
+    hideSex();
+    hideAgecat();
+    hideScreentime();
+    hideConcern();
+    hideMoney();
+    
+
+    force.on('tick', function (e) {
+      bubbles.each(moveToVerzicht(e.alpha))
+        .attr('cx', function (d) { return d.x; })
+        .attr('cy', function (d) { return d.y; });
+    });
+
+    force.start();
+  }
+
+  function moveToVerzicht(alpha) {
+    return function (d) {
+      var target = verzichtCenters[d.verzicht];
+      d.x = d.x + (target.x - d.x) * damper * alpha * 1.1;
+      d.y = d.y + (target.y - d.y) * damper * alpha * 1.1;
+    };
+  }
+
+  function hideVerzicht() {
+    svg.selectAll('.verzicht').remove();
+  }
+
+  function showVerzicht() {
+
+    var verzichtData = d3.keys(verzichtTitleX);
+    var verzicht = svg.selectAll('.verzicht')
+      .data(verzichtData);
+
+    verzicht.enter().append('text')
+      .attr('class', 'verzicht')
+      .attr('x', function (d) { return verzichtTitleX[d]; })
+      .attr('y', function (d) { return verzichtTitleY[d]; })
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+    }
 
     
 //* ------------------------------------------------------------------
@@ -652,6 +819,10 @@ function moveToAgecat(alpha) {
       splitBubblesintoConcern();
     } else if (displayName === 'screentime') {
       splitBubblesintoScreentime();
+    } else if (displayName === 'money') {
+      splitBubblesintoMoney();
+     } else if (displayName === 'verzicht') {
+      splitBubblesintoVerzicht();
     } else {
       groupBubbles();
     }
@@ -700,6 +871,12 @@ function moveToAgecat(alpha) {
                   '</span><br/>' +
                   '<span class="name">"Ich mache mir Sorgen um meine Daten": </span><span class="value">' +
                   d.concerntext +
+                  '</span><br/>' +
+                  '<span class="name">"Geldentschädigung für eine Woche Gerätverzicht": </span><span class="value">' +
+                  d.moneytext +
+                  '</span><br/>' +
+                  '<span class="name">"Handyverzicht für einen Tag": </span><span class="value">' +
+                  d.verzichttext +
                   '</span><br/>' +
                   '<span class="name">"Umfragejahr": </span><span class="value">' +
                   d.year +
