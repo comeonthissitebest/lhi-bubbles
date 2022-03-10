@@ -141,8 +141,8 @@ var agecatCenters = { // Center locations of the bubbles.
 // Vierter Button: Bildschirmzeit
     
   var screentimeCenters = { // Center locations of the bubbles. 
-    'weniger als 1h': { x: 180, y: height / 2 },
-    '1h-2h': { x: 300, y: height / 2 },
+    'weniger als 1h': { x: 220, y: height / 2 },
+    '1h-2h': { x: 310, y: height / 2 },
     '2h-3h': { x: 420, y: height / 2 },
     '3h-4h': { x: 550, y: height / 2 },
     '4h-5h': { x: 670, y: height / 2 },
@@ -237,6 +237,34 @@ var agecatCenters = { // Center locations of the bubbles.
     'Stimmt eher nicht': 70, 
     'Stimmt nicht': 70
   };  
+
+     // achter Button: Handyverzichtgeschlecht
+    
+    
+  var geschlechtverzichtCenters = { // Center locations of the bubbles. 
+    '0': { x: 50, y: height / 2  },  
+    '1': { x: 250, y: height / 2  },
+    '2': { x: 420, y: height / 2  },
+    '3': { x: 600, y: height / 2  },
+    '4': { x: 770, y: height / 2  }
+  
+  };
+
+  var geschlechtverzichtTitleX = {  // X locations of the year titles.
+    '"Würden sie ihr Handy für einen Tag nicht benutzen? Unterschieden in Geschlecht."': 500,
+    'Maennlich / Ja': 187,
+    'Maennlich / Nein': 415, 
+    'Weiblich / Ja': 655, 
+    'Weiblich / Nein': 900
+  };
+    
+  var geschlechtverzichtTitleY = {  // Y locations of the year titles.
+    '"Würden sie ihr Handy für einen Tag nicht benutzen? Unterschieden in Geschlecht."': 35, 
+    'Maennlich / Ja': 70,
+    'Maennlich / Nein': 70, 
+    'Weiblich / Ja': 70, 
+    'Weiblich / Nein': 70
+  };  
     
     
 //* ------------------------------------------------------------------
@@ -301,6 +329,7 @@ var agecatCenters = { // Center locations of the bubbles.
           
       
         agecat: d.kategoriealter,
+        age: d.alter,
           
         sex: d.geschlecht,
           
@@ -312,6 +341,9 @@ var agecatCenters = { // Center locations of the bubbles.
         
         verzicht: d.verzichtkat,
         verzichttext: d.verzicht,
+          
+        geschlechtverzicht: d.geschlechtverzichtkat,
+        geschlechtverzichttext: d.geschlechtverzicht,
         
         x: Math.random() * 900,
         y: Math.random() * 800
@@ -411,6 +443,7 @@ var agecatCenters = { // Center locations of the bubbles.
     hideConcern(); 
     hideMoney();
     hideVerzicht();
+    hideGeschlechtverzicht();
     
     force.on('tick', function (e) {
       bubbles.each(moveToCenter(e.alpha))
@@ -455,6 +488,7 @@ Die Positionierung basiert auf dem alpha Parameter des force layouts und wird kl
     hideScreentime();
     hideMoney();
     hideVerzicht();
+    hideGeschlechtverzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToYear(e.alpha))
@@ -505,6 +539,7 @@ function moveToYear(alpha) {
     hideScreentime();
     hideMoney();
     hideVerzicht();
+    hideGeschlechtverzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToAgecat(e.alpha))
@@ -555,6 +590,7 @@ function moveToAgecat(alpha) {
     hideScreentime();
     hideMoney();
     hideVerzicht();
+    hideGeschlechtverzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToSex(e.alpha))
@@ -605,6 +641,7 @@ function moveToAgecat(alpha) {
     hideConcern();
     hideMoney();
     hideVerzicht();
+    hideGeschlechtverzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToScreentime(e.alpha))
@@ -656,6 +693,7 @@ function moveToAgecat(alpha) {
     hideScreentime();
     hideMoney();
     hideVerzicht();
+    hideGeschlechtverzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToConcern(e.alpha))
@@ -705,6 +743,7 @@ function moveToAgecat(alpha) {
     hideScreentime();
     hideConcern();
     hideVerzicht();
+    hideGeschlechtverzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToMoney(e.alpha))
@@ -754,7 +793,7 @@ function moveToAgecat(alpha) {
     hideScreentime();
     hideConcern();
     hideMoney();
-    
+    hideGeschlechtverzicht();
 
     force.on('tick', function (e) {
       bubbles.each(moveToVerzicht(e.alpha))
@@ -787,6 +826,56 @@ function moveToAgecat(alpha) {
       .attr('class', 'verzicht')
       .attr('x', function (d) { return verzichtTitleX[d]; })
       .attr('y', function (d) { return verzichtTitleY[d]; })
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+    }
+      //* ------------------------------------------------------------------
+//
+// Handyverzichtgeschlecht
+//
+// -----------------------------------------------------------------*/
+    
+  function splitBubblesintoGeschlechtverzicht() {
+    showGeschlechtverzicht();
+    hideYear();
+    hideSex();
+    hideAgecat();
+    hideScreentime();
+    hideConcern();
+    hideMoney();
+    hideVerzicht();
+
+    force.on('tick', function (e) {
+      bubbles.each(moveToGeschlechtverzicht(e.alpha))
+        .attr('cx', function (d) { return d.x; })
+        .attr('cy', function (d) { return d.y; });
+    });
+
+    force.start();
+  }
+
+  function moveToGeschlechtverzicht(alpha) {
+    return function (d) {
+      var target = geschlechtverzichtCenters[d.geschlechtverzicht];
+      d.x = d.x + (target.x - d.x) * damper * alpha * 1.1;
+      d.y = d.y + (target.y - d.y) * damper * alpha * 1.1;
+    };
+  }
+
+  function hideGeschlechtverzicht() {
+    svg.selectAll('.geschlechtverzicht').remove();
+  }
+
+  function showGeschlechtverzicht() {
+
+    var geschlechtverzichtData = d3.keys(geschlechtverzichtTitleX);
+    var geschlechtverzicht = svg.selectAll('.geschlechtverzicht')
+      .data(geschlechtverzichtData);
+
+    geschlechtverzicht.enter().append('text')
+      .attr('class', 'geschlechtverzicht')
+      .attr('x', function (d) { return geschlechtverzichtTitleX[d]; })
+      .attr('y', function (d) { return geschlechtverzichtTitleY[d]; })
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
     }
@@ -823,6 +912,8 @@ function moveToAgecat(alpha) {
       splitBubblesintoMoney();
      } else if (displayName === 'verzicht') {
       splitBubblesintoVerzicht();
+     } else if (displayName === 'geschlechtverzicht') {
+      splitBubblesintoGeschlechtverzicht();
     } else {
       groupBubbles();
     }
@@ -853,7 +944,7 @@ function moveToAgecat(alpha) {
 
   var fillColor = d3.scale.ordinal()
     .domain(['1','2','3', '4','5','6'])
-    .range(['#F7CAD0', '#ADE8F4', '#48CAE4', '#0096C7','#023E8A','#03045E']);
+    .range(['#f72585', '#ffd6ff', '#c5c4ff', '#4895ef','#858ae3','#2c0735']);
 
   /* Tooltip-Funktion*/
   function showDetail(d) {
@@ -877,6 +968,9 @@ function moveToAgecat(alpha) {
                   '</span><br/>' +
                   '<span class="name">"Handyverzicht für einen Tag": </span><span class="value">' +
                   d.verzichttext +
+                  '</span><br/>' +
+                  '<span class="name">"Handyverzichtgeschlecht": </span><span class="value">' +
+                  d.geschlechtverzichttext +
                   '</span><br/>' +
                   '<span class="name">"Umfragejahr": </span><span class="value">' +
                   d.year +

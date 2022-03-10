@@ -2,10 +2,10 @@
 
 /*--- Font size der Texte ----*/
 
-.year, .age {
+.year, .verzicht, .age, .sex, .concern, .screentime, .money, .geschlechtverzicht {
   font-size: 18px;
   fill: #000000;
-  cursor: default;
+  cursor: default; 
 }
 
 /*-------------------------------------*/
