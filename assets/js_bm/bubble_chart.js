@@ -969,7 +969,7 @@ function moveToAgecat(alpha) {
                   '<span class="name">"Handyverzicht für einen Tag": </span><span class="value">' +
                   d.verzichttext +
                   '</span><br/>' +
-                  '<span class="name">"Handyverzichtgeschlecht": </span><span class="value">' +
+                  '<span class="name">"Handyverzicht nach Geschlecht": </span><span class="value">' +
                   d.geschlechtverzichttext +
                   '</span><br/>' +
                   '<span class="name">"Umfragejahr": </span><span class="value">' +
@@ -994,6 +994,7 @@ function moveToAgecat(alpha) {
 
     tooltip2.hidetooltip2();
   }
+
 
 //* ------------------------------------------------------------------
 //
