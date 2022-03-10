@@ -122,7 +122,7 @@ var agecatCenters = { // Center locations of the bubbles.
 // Dritter Button: Geschlecht
     
   var sexCenters = { // Center locations of the bubbles. 
-    'Maennlich': { x: 250, y: height / 2  },
+    'Maennlich': { x: 260, y: height / 2  },
     'Weiblich': { x: 450, y: height / 2  },
     'Non-Binaer': { x: 600, y: height / 2  },
     'null': { x: 750, y: height / 2  }
@@ -188,7 +188,7 @@ var agecatCenters = { // Center locations of the bubbles.
     
     
   var moneyCenters = { // Center locations of the bubbles. 
-    '0': { x: 220, y: height / 2  },
+    '0': { x: 230, y: height / 2  },
     '1': { x: 420, y: height / 2  },
     '2': { x: 600, y: height / 2  },
     '3': { x: 770, y: height / 2  }
